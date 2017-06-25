@@ -60,11 +60,11 @@ public class MovieSyncTask {
                 simpleJsonMovieData.toArray(cvArray);
                 context.getContentResolver().delete(MovieContract.MoviePopular.CONTENT_URI,null,null);
 
-                for (ContentValues values:cvArray){
-                    context.getContentResolver().insert(MovieContract.MoviePopular.CONTENT_URI, values);
-                }
+//                for (ContentValues values:cvArray){
+//                    context.getContentResolver().insert(MovieContract.MoviePopular.CONTENT_URI, values);
+//                }
 
-//                inserted = context.getContentResolver().bulkInsert(MovieContract.MoviePopular.CONTENT_URI, cvArray);
+                inserted = context.getContentResolver().bulkInsert(MovieContract.MoviePopular.CONTENT_URI, cvArray);
             }
 
 

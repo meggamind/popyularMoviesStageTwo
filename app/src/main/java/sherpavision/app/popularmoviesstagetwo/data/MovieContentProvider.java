@@ -22,9 +22,6 @@ public class MovieContentProvider extends ContentProvider {
 
     public static final int MOVIE_POPLUAR_LIST = 100;
     public static final int MOVIE_POPULAR_WITH_ID = 101;
-//    static final int MOVIE_POPULAR_DETAIL = 200;
-
-//    public static final int TASK_WITH_ID = 101;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private MovieDbHelper mMovieDbHelper;
@@ -46,11 +43,9 @@ public class MovieContentProvider extends ContentProvider {
 //    }
 //    // Member variable for a TaskDbHelper that's initialized in the onCreate() method
 //    private MovieDbHelper mMovieDbHelper;
-    Context mContext;
     @Override
     public boolean onCreate() {
-        mContext = getContext();
-        mMovieDbHelper = new MovieDbHelper(mContext);
+        mMovieDbHelper = new MovieDbHelper(getContext());
         return true;
     }
 
@@ -97,8 +92,7 @@ public class MovieContentProvider extends ContentProvider {
 
 
     @Override
-    public int bulkInsert(@NonNull Uri uri, @Nullable ContentValues[] values) {
-        // Get access to the task database (to write new data to)
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         final SQLiteDatabase db = mMovieDbHelper.getWritableDatabase();
 
         // Write URI matching code to identify the match for the tasks directory
@@ -125,7 +119,7 @@ public class MovieContentProvider extends ContentProvider {
                 if (rowsInserted > 0) {
                     Log.i("Aniket", "Notifying");
 
-                    mContext.getContentResolver().notifyChange(uri, null);
+                    getContext().getContentResolver().notifyChange(uri, null);
                     Log.i("Aniket", "Done Notifying");
 
                 }
@@ -137,33 +131,7 @@ public class MovieContentProvider extends ContentProvider {
             default:
                 return super.bulkInsert(uri, values);
         }
-
-//
-////                db.beginTransaction();
-//                long id = 0;
-//                try {
-//                    id = db.insert(MovieContract.MoviePopular.TABLE_NAME, null, values);
-//                } catch (Exception e) {
-//                    Log.i("Aniket", "eroor:" + e);
-//                }
-//                // Insert new values into the database
-//                // Inserting values into tasks table
-//                if (id > 0) {
-//                    returnUri = MovieContract.MoviePopular.buildPopularMoviesUri();
-//                    getContext().getContentResolver().notifyChange(uri, null);
-
-
-
-//                }
-
-                // Notify the resolver if the uri has been changed, and return the newly inserted URI
-//        if (id > 0) {
-//            getContext().getContentResolver().notifyChange(uri, null);
-//        }
-
-                // Return constructed uri (this points to the newly inserted row of data)
-//        return null;
-        }
+    }
 
         @Override
         public int delete (@NonNull Uri uri, @Nullable String selection, @Nullable String[]

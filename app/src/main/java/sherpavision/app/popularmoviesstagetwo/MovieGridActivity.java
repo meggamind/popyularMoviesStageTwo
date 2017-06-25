@@ -43,7 +43,7 @@ import sherpavision.app.popularmoviesstagetwo.utilities.FetchMovieTask;
 public class MovieGridActivity extends AppCompatActivity implements
         MovieAdapter.MovieAdapterOnClickHandler,
         LoaderManager.LoaderCallbacks<Cursor>,
-        ActionBar.TabListener{
+        ActionBar.TabListener {
     private RecyclerView mRecyclerView;
     private TextView mErrorMessageDisplay;
     private MovieAdapter mMovieAdapter;
@@ -90,7 +90,6 @@ public class MovieGridActivity extends AppCompatActivity implements
     static final int COL_REVIEW_NAME = 15;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,7 +115,7 @@ public class MovieGridActivity extends AppCompatActivity implements
             Will display our movie data
         */
 
-        mMovieAdapter = new MovieAdapter(getApplicationContext(),this);
+        mMovieAdapter = new MovieAdapter(getApplicationContext(), this);
         mRecyclerView.setAdapter(mMovieAdapter);
         mProgressBar = (ProgressBar) findViewById(R.id.pb_loading_indicator);
         showLoading();
@@ -172,13 +171,13 @@ public class MovieGridActivity extends AppCompatActivity implements
 //                mMovieAdapter.swapCursor(null);
 //            }
 //        });
-        MovieSyncUtils.startImmediateSync(this, MovieConstants.FETCH_POPULAR_MOVIES );
+        MovieSyncUtils.startImmediateSync(this, MovieConstants.FETCH_POPULAR_MOVIES);
     }
 
     @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction){
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         //Called when a tab is selected
-        Log.i("Aniket","onTabselected");
+        Log.i("Aniket", "onTabselected");
 
         int nTabSelected = tab.getPosition();
         switch (nTabSelected) {
@@ -189,7 +188,7 @@ public class MovieGridActivity extends AppCompatActivity implements
                 loadMovieData(MovieConstants.FETCH_TOPRATED_MOVIES);
                 break;
         }
-        Log.i("Aniket","DOMNEEeeeeee");
+        Log.i("Aniket", "DOMNEEeeeeee");
     }
 
     @Override
@@ -211,8 +210,8 @@ public class MovieGridActivity extends AppCompatActivity implements
     }
 
 
-    private void loadMovieData(String sortBy){
-Log.i("Aniket","Aniket1");
+    private void loadMovieData(String sortBy) {
+        Log.i("Aniket", "Aniket1");
         MovieItem mMovieItem = new MovieItem();
 
 //        showMovieDataView();
@@ -234,25 +233,25 @@ Log.i("Aniket","Aniket1");
 
 
     @Override
-    public void onClick(MovieItem movieItem){
+    public void onClick(MovieItem movieItem) {
         Context context = this;
         Intent movieSelectedIntent = new Intent(context, MovieSelectedActivity.class);
         movieSelectedIntent.putExtra("movieItemSelected", movieItem);
         startActivity(movieSelectedIntent);
     }
 
-    private void showMovieDataView(){
+    private void showMovieDataView() {
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
         mProgressBar.setVisibility(View.INVISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    private void showErrorMessage(){
+    private void showErrorMessage() {
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.INVISIBLE);
     }
 
-    private void showLoading(){
+    private void showLoading() {
         mRecyclerView.setVisibility(View.INVISIBLE);
         mProgressBar.setVisibility(View.VISIBLE);
     }
@@ -268,7 +267,7 @@ Log.i("Aniket","Aniket1");
         }
     }
 
-    private void setupTabs(){
+    private void setupTabs() {
         final ActionBar actionBar = getSupportActionBar();
         // Specify that tabs should be displayed in the action bar.
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -280,9 +279,9 @@ Log.i("Aniket","Aniket1");
     @Override
     public Loader<Cursor> onCreateLoader(int loaderId, final Bundle args) {
 
-        switch (loaderId){
+        switch (loaderId) {
             case ID_MOVIEDB_LOADER:
-                Log.i("Ainket","ID_MOVIEDB_LOADER");
+                Log.i("Ainket", "ID_MOVIEDB_LOADER");
                 Uri movieDbQueryUri = MovieContract.MoviePopular.CONTENT_URI;
                 Log.i("Aniket", "URI2: " + movieDbQueryUri.toString());
 
@@ -292,46 +291,42 @@ Log.i("Aniket","Aniket1");
 //                long normalizedUtcNow = SunshineDateUtils.normalizeDate(System.currentTimeMillis());
 //                String selection = MovieContract.MoviePopular.COLUMN_POPULAR_INDEX + " >= " + 0;
 
-                return new AsyncTaskLoader<Cursor>(this) {
-
-                    // Initialize a Cursor, this will hold all the task data
-                    Cursor mTaskData = null;
-
-                    // onStartLoading() is called when a loader first starts loading data
-                    @Override
-                    protected void onStartLoading() {
-                        if (mTaskData != null) {
-                            // Delivers any previously loaded data immediately
-                            deliverResult(mTaskData);
-                        } else {
-                            // Force a new load
-                            forceLoad();
-                        }
-                    }
-
-                    // deliverResult sends the result of the load, a Cursor, to the registered listener
-                    public void deliverResult(Cursor data) {
-                        mTaskData = data;
-                        super.deliverResult(data);
-                    }
-
-                    @Override
-                    public Cursor loadInBackground() {
-                        return null;
-                    }
-                };
-//                }CursorLoader(this,
-//                        movieDbQueryUri,
-//                        MOVIE_COLUMNS,
-//                        null,
-//                        null,
-//                        sortOrder);
+//                return new AsyncTaskLoader<Cursor>(this) {
 //
-//                if (a==null){
-//                    Log.i("Ainket","loader is null");
+//                    // Initialize a Cursor, this will hold all the task data
+//                    Cursor mTaskData = null;
+//
+//                    // onStartLoading() is called when a loader first starts loading data
+//                    @Override
+//                    protected void onStartLoading() {
+//                        if (mTaskData != null) {
+//                            // Delivers any previously loaded data immediately
+//                            deliverResult(mTaskData);
+//                        } else {
+//                            // Force a new load
+//                            forceLoad();
+//                        }
+//                    }
+//
+//                    // deliverResult sends the result of the load, a Cursor, to the registered listener
+//                    public void deliverResult(Cursor data) {
+//                        mTaskData = data;
+//                        super.deliverResult(data);
+//                    }
+//
+//                    @Override
+//                    public Cursor loadInBackground() {
+//                        return null;
+//                    }
+//                };
 //                }
-//                Log.i("Ainket","done wiyh onCreateLoader");
-////                return a;
+                Log.i("Ainket", "done wiyh onCreateLoader");
+                return new CursorLoader(this,
+                        movieDbQueryUri,
+                        MOVIE_COLUMNS,
+                        null,
+                        null,
+                        sortOrder);
             default:
                 throw new RuntimeException("Loader not implemented: " + loaderId);
         }
@@ -340,19 +335,10 @@ Log.i("Aniket","Aniket1");
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-        Log.i("Aniket","onLoadFinished");
+        Log.i("Aniket", "onLoadFinished");
         mMovieAdapter.swapCursor(data);
-        if(mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+        if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
         mRecyclerView.smoothScrollToPosition(mPosition);
-
-//        try {
-//            if (data.getCount() != 0) {
-//                Log.i("Aniket","Not null");
-//                showMovieDataView();
-//            }
-//        }catch(Exception e){
-//            e.printStackTrace();
-//        }
     }
 
     @Override
@@ -365,7 +351,7 @@ Log.i("Aniket","Aniket1");
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        Log.i("Aniket","onLoaderReset");
+        Log.i("Aniket", "onLoaderReset");
         mMovieAdapter.swapCursor(null);
     }
 }
