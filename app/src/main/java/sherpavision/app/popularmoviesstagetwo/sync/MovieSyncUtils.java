@@ -9,11 +9,9 @@ import android.util.Log;
  */
 
 public class MovieSyncUtils {
-    public static void startImmediateSync(Context context, String...params){
-        Log.i("Aniket","Aniket2");
-
+    public static void startImmediateSync(Context context,String...params){
         Intent intentToSyncImmediately = new Intent(context, MovieSyncIntentService.class);
-        intentToSyncImmediately.putExtra("params", params);
+        intentToSyncImmediately.putExtra("params",params);
         context.startService(intentToSyncImmediately);
     }
 }

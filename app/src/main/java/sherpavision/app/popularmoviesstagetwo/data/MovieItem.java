@@ -76,9 +76,6 @@ public class MovieItem implements Parcelable {
     };
 
 
-
-
-
     public String getTitle(){return title;}
     public void setTitle(String title){
         this.title = title;
@@ -127,18 +124,12 @@ public class MovieItem implements Parcelable {
     public int getMovieId(){return mMovieId;}
     public void setMovieId(int movieId){this.mMovieId = movieId;}
 
-    public void addMovieTrailer(String videoTrailer){ Log.i("aniket6","Aniket3 videoTrailer: " + videoTrailer); this.mMovieTrailer.add(videoTrailer);}
     public String getMovieTrailer(int trailerIndex){return this.mMovieTrailer.get(trailerIndex);}
     public Vector<String> getMovieTrailers(){return this.mMovieTrailer;}
 
-
-
-    public void addMovieReviewAuthor(String reviewAuthor){ Log.i("aniket6","Aniket3 videoTrailer: " + reviewAuthor); this.mMovieReviewAuthors.add(reviewAuthor);}
     public String getMovieReviewAuthor(int trailerIndex){return this.mMovieReviewAuthors.get(trailerIndex);}
     public Vector<String> getMovieReviewAuthors(){return this.mMovieReviewAuthors;}
 
-
-    public void addMovieReviews(String videoReview){ Log.i("aniket6","Aniket3 mMovieReviews: " + videoReview); this.mMovieReviews.add(videoReview);}
     public String getMovieReview(int trailerIndex){return this.mMovieReviews.get(trailerIndex);}
     public Vector<String> getMovieReviews(){return this.mMovieReviews;}
 }

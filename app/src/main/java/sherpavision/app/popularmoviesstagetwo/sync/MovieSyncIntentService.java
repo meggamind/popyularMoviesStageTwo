@@ -12,8 +12,6 @@ public class MovieSyncIntentService extends IntentService{
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        Log.i("Aniket","Aniket3");
-
         String[] params = intent.getStringArrayExtra("params");
         MovieSyncTask.syncMovies(this, params);
     }

@@ -23,6 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by aniket on 5/13/17.
@@ -36,8 +37,8 @@ public final class NetworkUtils {
     public static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
+            Log.i("NetworkUtils","url: " + urlConnection.toString());
             InputStream in = urlConnection.getInputStream();
-            Log.i("Aniket","inpustream to string: " + in.toString());
             Scanner scanner = new Scanner(in);
             scanner.useDelimiter("\\A");
 
@@ -47,7 +48,12 @@ public final class NetworkUtils {
             } else {
                 return null;
             }
-        } finally {
+        } catch(Exception e){
+            return null;
+        }
+
+
+        finally {
             urlConnection.disconnect();
         }
     }

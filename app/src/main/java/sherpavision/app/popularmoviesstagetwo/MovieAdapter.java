@@ -3,6 +3,7 @@ package sherpavision.app.popularmoviesstagetwo;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.app.LoaderManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Collections;
 import java.util.Vector;
 
 import sherpavision.app.popularmoviesstagetwo.data.MovieConstants;
@@ -26,29 +28,20 @@ import sherpavision.app.popularmoviesstagetwo.data.MovieItem;
  */
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
-    private MovieItem[] mMovieItems;
     private Context mContext;
-    private int mScreenHeight;
-    private int mScreenWidth;
     private Cursor mCursor;
-
     private final MovieAdapterOnClickHandler mClickHandler;
-
-
-
+    private Vector<MovieItem> mMovieItems = new Vector<MovieItem>();
 
     public interface MovieAdapterOnClickHandler {
-        void onClick(MovieItem movieSelected);
+        void onClick(int movieId);
     }
 
     // Add custom onClickListener as a parameter to the constructor
     public MovieAdapter(Context context, MovieAdapterOnClickHandler clickHandler) {
         mContext = context;
-        Log.i("AniketAdaptor", "in MovieAdapterViewHolder");
         mClickHandler = clickHandler;
         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-        mScreenWidth = metrics.widthPixels;
-        mScreenHeight = metrics.heightPixels;
     }
 
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -65,8 +58,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            MovieItem movieItem = mMovieItems[adapterPosition];
-            mClickHandler.onClick(movieItem);
+            MovieItem movieItem = mMovieItems.get(adapterPosition);
+            mClickHandler.onClick(movieItem.getMovieId());
         }
     }
 
@@ -76,7 +69,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public MovieAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        Log.i("AniketAdaptor", "in onCreateViewHolder");
         Context context = viewGroup.getContext();
         int layoutIdForListItem = R.layout.movie_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -87,11 +79,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public void onBindViewHolder(MovieAdapterViewHolder movieAdapterViewHolder, int position) {
-        mCursor.moveToPosition(position);
-
-        Log.i("AniketAdaptor", mCursor.getString(MovieGridActivity.COL_CURSOR_ID));
         Picasso.with(mContext)
-                .load("http://image.tmdb.org/t/p/w185/" + mMovieItems[position].getMovie_poster())
+                .load("http://image.tmdb.org/t/p/w185/" + mMovieItems.get(position).getMovie_poster())
                 .error(R.drawable.ic_no_wifi)
                 .placeholder(R.drawable.ic_loading)
                 .into(movieAdapterViewHolder.mPosterImage);
@@ -99,33 +88,28 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public int getItemCount() {
-        if (null == mCursor) {
-            Log.i("AniketAdaptor", "mCursor is null");
+        if (null == mMovieItems) {
             return 0;
         }
-        return mCursor.getCount();
+
+        return mMovieItems.size();
     }
 
-    void swapCursor(Cursor newCursor) {
+    void swapCursor(Cursor newCursor, String tabSelected) {
         mCursor = newCursor;
+        setMovieData(mCursor, tabSelected);
         notifyDataSetChanged();
     }
 
-//    public void setMovieData(Vector<ContentValues> movieItems){
-//        Log.i("Aniket", "Setting movie data! ");
-//        mMovieItems = new MovieItem[movieItems.size()];
-//        for(int i=0; i < movieItems.size();i++){
-//            mMovieItems[i] = new MovieItem();
-//            mMovieItems[i].setOriginalTitle(movieItems.get(i).getAsString(MovieConstants.MOVIEDB_ORIGINAL_TITLE));
-//            mMovieItems[i].setTitle(movieItems.get(i).getAsString(MovieConstants.MOVIEDB_TITLE));
-//            mMovieItems[i].setMovie_poster(movieItems.get(i).getAsString(MovieConstants.MOVIEDB_POSTER_PATH));
-//            mMovieItems[i].setMovie_backdrop(movieItems.get(i).getAsString(MovieConstants.MOVIEDB_BACKDROP_PATH));
-//            mMovieItems[i].setMovie_overview(movieItems.get(i).getAsString(MovieConstants.MOVIEDB_OVERVIEW));
-//            mMovieItems[i].setMovie_vote(movieItems.get(i).getAsFloat(MovieConstants.MOVIEDB_VOTE_AVERAGE));
-//            mMovieItems[i].setMovie_releaseDate(movieItems.get(i).getAsString(MovieConstants.MOVIEDB_RELEASE_DATE));
-//            mMovieItems[i].setMovieId(movieItems.get(i).getAsInteger(MovieConstants.MOVIEDB_ID));
-//        }
-//        notifyDataSetChanged();
-//    }
-
+    public void setMovieData(Cursor mCursor, String tabSelected) {
+        mMovieItems.clear();
+        for (int i = 0; i < mCursor.getCount(); i++) {
+            mCursor.moveToPosition(i);
+            mMovieItems.add(new MovieItem());
+            mMovieItems.get(i).setMovie_poster(mCursor.getString(MovieGridActivity.COL_POSTER_PATH));
+            mMovieItems.get(i).setMovieId(mCursor.getInt(MovieGridActivity.COL_MOVIE_ID));
+        }
+        mCursor.close();
+        notifyDataSetChanged();
+    }
 }

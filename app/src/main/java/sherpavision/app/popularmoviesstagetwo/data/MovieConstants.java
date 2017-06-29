@@ -1,8 +1,13 @@
 package sherpavision.app.popularmoviesstagetwo.data;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
+import android.util.Log;
 
 import sherpavision.app.popularmoviesstagetwo.BuildConfig;
 
@@ -13,7 +18,7 @@ import sherpavision.app.popularmoviesstagetwo.BuildConfig;
 public class MovieConstants {
 
 
-    public static final String FETCH_POPULAR_MOVIES = "popularity";
+    public static final String FETCH_POPULAR_MOVIES = "popular";
     public static final String FETCH_TOPRATED_MOVIES = "vote_average";
     public static final String MOVIE_BASE_URL = "https://api.themoviedb.org/3/movie/";
     public static final String API_KEY = "api_key";
@@ -38,11 +43,12 @@ public class MovieConstants {
     public static final String MOVIEDB_VIDEO_TYPE = "type";
     public static final String MOVIEDB_TRAILER_TYPE = "Trailer";
     public static final String MOVIEDB_REVIEWS = "reviews";
+    public static final String MOVIEDB_DELIMINATOR = ":::";
 
 
 
     public static String getBaseUrlFor(String sortBy){
-       if(sortBy == FETCH_POPULAR_MOVIES){
+       if(sortBy.equals(FETCH_POPULAR_MOVIES)){
            return MOVIE_BASE_URL + MOVIEDB_POPULAR_URL;
        }else{
            return MOVIE_BASE_URL + MOVIEDB_TOPRATED_URL;
@@ -53,5 +59,33 @@ public class MovieConstants {
         final SpannableStringBuilder spReleaseDate = new SpannableStringBuilder(stringToConvert);
         spReleaseDate.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, stringToConvert.length(), 0);
         return spReleaseDate;
+    }
+
+
+    public static void watchYoutubeVideo(String id, Context context) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
+            if (MovieConstants.isAppInstalled("com.google.android.youtube", context)) {
+                intent.setClassName("com.google.android.youtube", "com.google.android.youtube.WatchActivity");
+            }
+            context.startActivity(intent);
+        } catch (ActivityNotFoundException ex) {
+            Intent intent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://www.youtube.com/watch?v=" + id));
+            context.startActivity(intent);
+        }
+    }
+
+
+    public static boolean isAppInstalled(String uri, Context context) {
+        PackageManager pm = context.getPackageManager();
+        boolean installed = false;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            installed = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            installed = false;
+        }
+        return installed;
     }
 }

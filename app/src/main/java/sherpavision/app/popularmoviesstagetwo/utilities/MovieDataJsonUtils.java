@@ -38,7 +38,7 @@ public final class MovieDataJsonUtils {
 
     public MovieDataJsonUtils(Context context) {
 
-        Log.i("Aniket123", "Aniket2 id:");
+//        Log.i("Aniket123", "Aniket2 id:");
 
         mContext = context;
     }
@@ -57,7 +57,6 @@ public final class MovieDataJsonUtils {
 
     private static Vector<ContentValues> fetchMovieListDetails(String movieListJsonStr){
         Vector<ContentValues> cVVector  = new Vector<ContentValues>();
-//        Vector<ContentValues> cVVector1  = new Vector<ContentValues>();
         try {
             JSONObject movieDataJson = new JSONObject(movieListJsonStr);
             JSONArray movieListArray = movieDataJson.getJSONArray(MovieConstants.MOVIEDB_RESULTS);
@@ -89,23 +88,7 @@ public final class MovieDataJsonUtils {
                 vote_average = movieInfo.getString(MovieConstants.MOVIEDB_VOTE_AVERAGE);
                 original_title = movieInfo.getString(MovieConstants.MOVIEDB_ORIGINAL_TITLE);
                 id = movieInfo.getInt(MovieConstants.MOVIEDB_ID);
-                Log.i("Aniket", "Aniket2 id:" + String.valueOf(id));
-
                 ContentValues movieValues = new ContentValues();
-//                ContentValues movieValues1 = new ContentValues();
-
-//                movieValues.put(MovieConstants.MOVIEDB_ID, id);
-//                movieValues.put(MovieConstants.MOVIEDB_OVERVIEW, overview);
-//                movieValues.put(MovieConstants.MOVIEDB_POSTER_PATH, poster_path);
-//                movieValues.put(MovieConstants.MOVIEDB_BACKDROP_PATH, backdrop_path);
-//                movieValues.put(MovieConstants.MOVIEDB_RELEASE_DATE, release_date);
-//                movieValues.put(MovieConstants.MOVIEDB_TITLE, title);
-//                movieValues.put(MovieConstants.MOVIEDB_ORIGINAL_TITLE, original_title);
-//                movieValues.put(MovieConstants.MOVIEDB_VOTE_AVERAGE, vote_average);
-//                movieValues.put(MovieContract.MoviePopular.COLUMN_POPULAR_INDEX, popularity);
-
-
-
                 movieValues.put(MovieContract.MoviePopular.COLUMN_MOVIE_ID, id);
                 movieValues.put(MovieContract.MoviePopular.COLUMN_OVERVIEW, overview);
                 movieValues.put(MovieContract.MoviePopular.COLUMN_POSTER_PATH, poster_path);
@@ -143,6 +126,11 @@ public final class MovieDataJsonUtils {
             Vector<String> authors = new Vector<String>();
             Vector<String> reviews = new Vector<String>();
             int k =0;
+            StringBuilder trailerBuilder = new StringBuilder();
+            StringBuilder movieReviewBuilder = new StringBuilder();
+            StringBuilder movieReviewAuthorBuilder = new StringBuilder();
+            StringBuilder movieReviewContentBuilder = new StringBuilder();
+
             for (int i = 0; i < movieTrailers.length(); i++) {
                 String type;
                 String videoKey;
@@ -153,23 +141,23 @@ public final class MovieDataJsonUtils {
                 if(MovieConstants.MOVIEDB_TRAILER_TYPE.equals(type)){
                     videoKey = movieVideo.getString(MovieConstants.MOVIEDB_MOVIE_KEY);
                     trailer.add(videoKey);
-                    Log.i("Aniket","moviedb" + videoKey);
+                    trailerBuilder.append(videoKey);
+                    trailerBuilder.append(MovieConstants.MOVIEDB_DELIMINATOR);
                 }
             }
-
-            movieValues.put(MovieConstants.MOVIEDB_MOVIE_KEY, convertVectorToByteArray(trailer));
-
+            movieValues.put(MovieConstants.MOVIEDB_MOVIE_KEY, trailerBuilder.toString());
             for (int j = 0; j < movieReviewArray.length(); j++) {
                 JSONObject movieReview = movieReviewArray.getJSONObject(j);
                 authors.add(movieReview.getString("author"));
+                movieReviewAuthorBuilder.append(movieReview.getString("author"));
+                movieReviewAuthorBuilder.append(MovieConstants.MOVIEDB_DELIMINATOR);
                 reviews.add(movieReview.getString("content"));
-//                Log.i("review","author: "+ movieReview.getString("author"));
-//                Log.i("review","content: " + movieReview.getString("content"));
+                movieReviewContentBuilder.append(movieReview.getString("content"));
+                movieReviewContentBuilder.append(MovieConstants.MOVIEDB_DELIMINATOR);
             }
+            movieValues.put("author", movieReviewAuthorBuilder.toString());
+            movieValues.put("content", movieReviewContentBuilder.toString());
 
-            movieValues.put("author", convertVectorToByteArray(authors));
-
-            movieValues.put("reviews", convertVectorToByteArray(reviews));
             cVVector.add(movieValues);
 
         } catch (JSONException e) {
@@ -179,7 +167,7 @@ public final class MovieDataJsonUtils {
     }
 
 
-    private static byte[] convertVectorToByteArray(Vector<String> vector){
+    private static byte[] convertVectorToByteAsrray(Vector<String> vector){
         final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try {
             final ObjectOutputStream objectOutputStream =

@@ -3,7 +3,7 @@
     android:id="@+id/main_window"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/main_background">
+    android:background="@color/colorBackgroundMain">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_movie_list"

@@ -24,7 +24,6 @@ public class MovieUrlBuilder {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        Log.v(TAG, "Built URI " + url.toString());
         return url;
     }
 
@@ -33,8 +32,6 @@ public class MovieUrlBuilder {
         Uri builtUri = Uri.parse(fetch_base_url).buildUpon()
                 .appendQueryParameter(MovieConstants.API_KEY, MovieConstants.KEY)
                 .appendPath(movieId)
-//                .appendPath("videos")
-//                .appendPath("videos")
                 .appendQueryParameter("append_to_response","reviews,videos")
                 .build();
         URL url = null;
@@ -43,7 +40,6 @@ public class MovieUrlBuilder {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        Log.v(TAG, "Built URI for Individual movie: " + url.toString());
         return url;
     }
 
