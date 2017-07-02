@@ -32,6 +32,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     private Cursor mCursor;
     private final MovieAdapterOnClickHandler mClickHandler;
     private Vector<MovieItem> mMovieItems = new Vector<MovieItem>();
+    int mPosition;
 
     public interface MovieAdapterOnClickHandler {
         void onClick(int movieId);
@@ -79,6 +80,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public void onBindViewHolder(MovieAdapterViewHolder movieAdapterViewHolder, int position) {
+        mPosition = position;
         Picasso.with(mContext)
                 .load("http://image.tmdb.org/t/p/w185/" + mMovieItems.get(position).getMovie_poster())
                 .error(R.drawable.ic_no_wifi)
@@ -111,5 +113,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         }
         mCursor.close();
         notifyDataSetChanged();
+    }
+
+    public int getScrollPosition(){
+        return mPosition;
     }
 }

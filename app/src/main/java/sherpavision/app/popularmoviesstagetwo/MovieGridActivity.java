@@ -2,6 +2,7 @@ package sherpavision.app.popularmoviesstagetwo;
 
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.os.Bundle;
@@ -22,6 +23,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+
+import java.util.Map;
+import java.util.Vector;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,6 +61,7 @@ public class MovieGridActivity extends AppCompatActivity implements
     private static final int ID_MOVIEDB_TOP_RATED = 45;
     private static final int ID_MOVIEDB_FAVORITE = 46;
     private String mTab = null;
+    private int[] mRetainScrollPosition = new int[MovieConstants.TAB_NAMES.length];
 
 
     static final String[] MOVIE_COLUMNS = {
@@ -77,7 +82,7 @@ public class MovieGridActivity extends AppCompatActivity implements
     };
 
 
-    private int mTabSelected =0;
+    private int mTabSelected = 0;
     public static final int COL_CURSOR_ID = 0;
     public static final int COL_MOVIE_ID = 1;
     public static final int COL_POPULAR_INDEX = 2;
@@ -122,6 +127,22 @@ public class MovieGridActivity extends AppCompatActivity implements
         setupTabs();
         MovieSyncUtils.startImmediateSync(this, MovieConstants.FETCH_POPULAR_MOVIES);
         MovieSyncUtils.startImmediateSync(this, MovieConstants.FETCH_TOPRATED_MOVIES);
+        if (savedInstanceState != null) {
+            mTabSelected = savedInstanceState.getInt("tabSelected");
+            getSupportActionBar().setSelectedNavigationItem(mTabSelected);
+            mRetainScrollPosition = savedInstanceState.getIntArray("movieScrollPosition");
+        }
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("tabSelected", getSupportActionBar().getSelectedNavigationIndex());
+
+        mRetainScrollPosition[mTabSelected] = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        outState.putIntArray("movieScrollPosition", mRetainScrollPosition);
+
     }
 
     @Override
@@ -133,6 +154,8 @@ public class MovieGridActivity extends AppCompatActivity implements
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+        mRetainScrollPosition[mTabSelected] = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+
     }
 
     @Override
@@ -180,9 +203,9 @@ public class MovieGridActivity extends AppCompatActivity implements
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.addTab(actionBar.newTab().setText("Popular").setTabListener(this));
-        actionBar.addTab(actionBar.newTab().setText("Top Rated").setTabListener(this));
-        actionBar.addTab(actionBar.newTab().setText(MovieContract.MovieFavorite.TABLE_NAME).setTabListener(this));
+        for (int i = 0; i < MovieConstants.TAB_NAMES.length; i++) {
+            actionBar.addTab(actionBar.newTab().setText(MovieConstants.TAB_NAMES[i]).setTabListener(this));
+        }
     }
 
     @Override
@@ -225,12 +248,17 @@ public class MovieGridActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            if (data != null && data.getCount() != 0) {
-                showMovieDataView();
-                mMovieAdapter.swapCursor(data, mTab);
-            }
-            if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
-            mRecyclerView.smoothScrollToPosition(mPosition);
+        if (data != null && data.getCount() != 0) {
+            showMovieDataView();
+            mMovieAdapter.swapCursor(data, mTab);
+        }
+        mPosition = mRetainScrollPosition[mTabSelected];
+
+        if (mPosition == RecyclerView.NO_POSITION) {
+            mPosition = 0;
+            mRetainScrollPosition[mTabSelected] = 0;
+        }
+        mRecyclerView.smoothScrollToPosition(mRetainScrollPosition[mTabSelected]);
     }
 
     @Override
@@ -238,13 +266,14 @@ public class MovieGridActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         showMovieDataView();
         restartLoader(mTabSelected);
+        ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPosition(12);
     }
 
-    void  restartLoader(int nTabSelected){
+    void restartLoader(int nTabSelected) {
         switch (nTabSelected) {
             case TAB_POPULAR_MOVIES:
                 mTab = MovieConstants.FETCH_POPULAR_MOVIES;

@@ -37,9 +37,6 @@ public final class MovieDataJsonUtils {
     public static Context mContext = null;
 
     public MovieDataJsonUtils(Context context) {
-
-//        Log.i("Aniket123", "Aniket2 id:");
-
         mContext = context;
     }
     public static Vector<ContentValues> getSimpleMovieDataStringsFromJson(String movieListJsonStr, String whatToDo)
@@ -66,36 +63,36 @@ public final class MovieDataJsonUtils {
             for (int i = 0; i < movieListArray.length(); i++) {
                 int id;
                 String overview;
-                String poster_path;
-                String backdrop_path;
-                String release_date;
+                String posterPath;
+                String backdropPath;
+                String releaseDate;
                 String popularity;
                 String title;
-                String original_title;
-                String vote_average;
-                String vote_count;
+                String originalTitle;
+                String voteAverage;
+                String voteCount;
                 String reviewAuthor;
                 String reviewContent;
 
                 JSONObject movieInfo = movieListArray.getJSONObject(i);
 
                 overview = movieInfo.getString(MovieConstants.MOVIEDB_OVERVIEW);
-                poster_path = movieInfo.getString(MovieConstants.MOVIEDB_POSTER_PATH);
-                backdrop_path = movieInfo.getString(MovieConstants.MOVIEDB_BACKDROP_PATH);
-                release_date = movieInfo.getString(MovieConstants.MOVIEDB_RELEASE_DATE);
+                posterPath = movieInfo.getString(MovieConstants.MOVIEDB_POSTER_PATH);
+                backdropPath = movieInfo.getString(MovieConstants.MOVIEDB_BACKDROP_PATH);
+                releaseDate = movieInfo.getString(MovieConstants.MOVIEDB_RELEASE_DATE);
                 popularity = movieInfo.getString(MovieConstants.MOVIEDB_POPULARITY);
                 title = movieInfo.getString(MovieConstants.MOVIEDB_TITLE);
-                vote_average = movieInfo.getString(MovieConstants.MOVIEDB_VOTE_AVERAGE);
-                original_title = movieInfo.getString(MovieConstants.MOVIEDB_ORIGINAL_TITLE);
+                voteAverage = movieInfo.getString(MovieConstants.MOVIEDB_VOTE_AVERAGE);
+                originalTitle = movieInfo.getString(MovieConstants.MOVIEDB_ORIGINAL_TITLE);
                 id = movieInfo.getInt(MovieConstants.MOVIEDB_ID);
                 ContentValues movieValues = new ContentValues();
                 movieValues.put(MovieContract.MoviePopular.COLUMN_MOVIE_ID, id);
                 movieValues.put(MovieContract.MoviePopular.COLUMN_OVERVIEW, overview);
-                movieValues.put(MovieContract.MoviePopular.COLUMN_POSTER_PATH, poster_path);
-                movieValues.put(MovieContract.MoviePopular.COLUMN_RELEASE_DATE, release_date);
+                movieValues.put(MovieContract.MoviePopular.COLUMN_POSTER_PATH, posterPath);
+                movieValues.put(MovieContract.MoviePopular.COLUMN_RELEASE_DATE, releaseDate);
                 movieValues.put(MovieContract.MoviePopular.COLUMN_TITLE, title);
-                movieValues.put(MovieContract.MoviePopular.COLUMN_ORIGINAL_TITLE, original_title);
-                movieValues.put(MovieContract.MoviePopular.COLUMN_VOTE_AVERAGE, vote_average);
+                movieValues.put(MovieContract.MoviePopular.COLUMN_ORIGINAL_TITLE, originalTitle);
+                movieValues.put(MovieContract.MoviePopular.COLUMN_VOTE_AVERAGE, voteAverage);
                 movieValues.put(MovieContract.MoviePopular.COLUMN_POPULAR_INDEX, popularity);
 
                 cVVector.add(movieValues);

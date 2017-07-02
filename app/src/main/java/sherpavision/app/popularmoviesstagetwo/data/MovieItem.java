@@ -14,12 +14,12 @@ import java.util.Vector;
 
 public class MovieItem implements Parcelable {
     private String title;
-    private String movie_poster;
-    private String movie_backdrop;
-    private String movie_overview;
-    private float vote_average;
-    private String release_date;
-    private String original_title;
+    private String moviePoster;
+    private String movieBackdrop;
+    private String movieOverview;
+    private float voteAverage;
+    private String releaseDate;
+    private String originalTitle;
     private int mMovieId;
     private Vector<String> mMovieTrailer;
     private Vector<String> mMovieReviewAuthors;
@@ -28,12 +28,12 @@ public class MovieItem implements Parcelable {
 
     public MovieItem(Parcel in) {
         title = in.readString();
-        movie_poster = in.readString();
-        movie_backdrop = in.readString();
-        movie_overview = in.readString();
-        vote_average = in.readFloat();
-        release_date = in.readString();
-        original_title = in.readString();
+        moviePoster = in.readString();
+        movieBackdrop = in.readString();
+        movieOverview = in.readString();
+        voteAverage = in.readFloat();
+        releaseDate = in.readString();
+        originalTitle = in.readString();
         mMovieId = in.readInt();
     }
 
@@ -46,12 +46,12 @@ public class MovieItem implements Parcelable {
 
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
-        dest.writeString(movie_poster);
-        dest.writeString(movie_backdrop);
-        dest.writeString(movie_overview);
-        dest.writeFloat(vote_average);
-        dest.writeString(release_date);
-        dest.writeString(original_title);
+        dest.writeString(moviePoster);
+        dest.writeString(movieBackdrop);
+        dest.writeString(movieOverview);
+        dest.writeFloat(voteAverage);
+        dest.writeString(releaseDate);
+        dest.writeString(originalTitle);
         dest.writeInt(mMovieId);
 
     }
@@ -82,43 +82,43 @@ public class MovieItem implements Parcelable {
     }
 
     public String getMovie_poster(){
-        return movie_poster;
+        return moviePoster;
     }
-    public void setMovie_poster(String movie_poster){
-        this.movie_poster = movie_poster;
+    public void setMovie_poster(String moviePoster){
+        this.moviePoster = moviePoster;
     }
 
     public String getMovie_overview(){
-        return movie_overview;
+        return movieOverview;
     }
-    public void setMovie_overview(String movie_overview){
-        this.movie_overview = movie_overview;
+    public void setMovie_overview(String movieOverview){
+        this.movieOverview = movieOverview;
     }
 
     public float getMovie_vote(){
-        return vote_average;
+        return voteAverage;
     }
-    public void setMovie_vote(float vote_average){
-        this.vote_average = vote_average;
+    public void setMovie_vote(float voteAverage){
+        this.voteAverage = voteAverage;
     }
 
     public String getMovie_releaseDate(){
-        return release_date;
+        return releaseDate;
     }
-    public void setMovie_releaseDate(String release_date){
-        this.release_date = release_date;
+    public void setMovie_releaseDate(String releaseDate){
+        this.releaseDate = releaseDate;
     }
 
     public String getMovie_backdrop(){
-        return movie_backdrop;
+        return movieBackdrop;
     }
-    public void setMovie_backdrop(String movie_backdrop){
-        this.movie_backdrop = movie_backdrop;
+    public void setMovie_backdrop(String movieBackdrop){
+        this.movieBackdrop = movieBackdrop;
     }
 
-    public String getOriginalTitle(){return original_title;}
-    public void setOriginalTitle(String original_title){
-        this.original_title = original_title;
+    public String getOriginalTitle(){return originalTitle;}
+    public void setOriginalTitle(String originalTitle){
+        this.originalTitle = originalTitle;
     }
 
     public int getMovieId(){return mMovieId;}

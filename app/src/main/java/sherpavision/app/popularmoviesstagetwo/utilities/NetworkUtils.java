@@ -17,13 +17,17 @@ package sherpavision.app.popularmoviesstagetwo.utilities;
 import android.net.Uri;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
+
+import sherpavision.app.popularmoviesstagetwo.data.MovieConstants;
 
 /**
  * Created by aniket on 5/13/17.
@@ -37,11 +41,12 @@ public final class NetworkUtils {
     public static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
+            urlConnection.setConnectTimeout(MovieConstants.URL_CONNECTION_CONNECT_TIMEOUT);
+            urlConnection.setReadTimeout(MovieConstants.URL_CONNECTION_READ_TIMEOUT);
             Log.i("NetworkUtils","url: " + urlConnection.toString());
-            InputStream in = urlConnection.getInputStream();
+            BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
             Scanner scanner = new Scanner(in);
             scanner.useDelimiter("\\A");
-
             boolean hasInput = scanner.hasNext();
             if (hasInput) {
                 return scanner.next();
@@ -51,8 +56,6 @@ public final class NetworkUtils {
         } catch(Exception e){
             return null;
         }
-
-
         finally {
             urlConnection.disconnect();
         }

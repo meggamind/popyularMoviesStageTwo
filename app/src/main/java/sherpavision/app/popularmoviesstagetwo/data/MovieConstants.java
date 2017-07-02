@@ -17,6 +17,8 @@ import sherpavision.app.popularmoviesstagetwo.BuildConfig;
 
 public class MovieConstants {
 
+    public static final int URL_CONNECTION_CONNECT_TIMEOUT = 5000;
+    public static final int URL_CONNECTION_READ_TIMEOUT = 10000;
 
     public static final String FETCH_POPULAR_MOVIES = "popular";
     public static final String FETCH_TOPRATED_MOVIES = "vote_average";
@@ -44,7 +46,7 @@ public class MovieConstants {
     public static final String MOVIEDB_TRAILER_TYPE = "Trailer";
     public static final String MOVIEDB_REVIEWS = "reviews";
     public static final String MOVIEDB_DELIMINATOR = ":::";
-
+    public static final String[] TAB_NAMES = {"Popular","Top Rated","Favorite"};
 
 
     public static String getBaseUrlFor(String sortBy){
